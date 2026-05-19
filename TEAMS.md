@@ -42,7 +42,7 @@ Project-specific teams are created per repository or project group and are **not
 | `members` | Base team. All org members belong to it. | Read on public/shared repos | Any org member | `admins` |
 | `maintainers` | People with write access to shared and incubating repos. | Write on shared and incubating repos | Per GOVERNANCE §3.2 — nominated by an existing Maintainer, confirmed by lazy consensus | `steering-committee` |
 | `release-managers` | Subset of Maintainers authorized to cut releases. | Maintain on shared repos (push tags, manage releases) | Designated by repo Maintainers; tracked in repo `MAINTAINERS.md` | `steering-committee` |
-| `admins` | GitHub organization owners. Kept intentionally small. | Admin on org settings and all repos | Steering Committee designation; one or two per Founding Party | `steering-committee` |
+| `admins` | GitHub organization owners. Kept intentionally small. Visibility: `closed` (visible to all org members). | Admin on org settings and all repos | Steering Committee designation; two per Founding Party | `steering-committee` |
 | `security` | Handles security triage, CODEOWNERS for sensitive paths, and coordinated disclosure. | Read by default; CODEOWNERS write on `/security/` and similar paths | Designated per repo; cross-party representation required for shared repos | `steering-committee` |
 | `bots` | Service accounts, GitHub Apps, automation identities. | Varies per repo; granted minimum required permission | Created via PR to `IBM-Project-Imagine/.github`; documented in [Bots](#bots) | `admins` |
 
@@ -103,12 +103,12 @@ Per-repo `CODEOWNERS` files use team handles. Common patterns:
 /security/              @IBM-Project-Imagine/security
 /.github/workflows/     @IBM-Project-Imagine/security @IBM-Project-Imagine/<repo>-maintainers
 
-# Cross-party review required on shared repos (one reviewer from any two parties)
-# Enforced via repo ruleset requiring CODEOWNERS review, with reviewers spanning teams:
+# Cross-party review required on shared repos (at least two Founding Parties represented)
+# Adopted approach: CODEOWNERS listing all three affiliation teams; any reviewer from any two parties satisfies the rule.
 /core/                  @IBM-Project-Imagine/affiliation-microsoft @IBM-Project-Imagine/affiliation-github @IBM-Project-Imagine/affiliation-ibm
 ```
 
-The last pattern is one approach to GOVERNANCE §4's "at least two Founding Parties represented" rule. The cleanest enforcement is via repo rulesets requiring a minimum number of approving reviewers from CODEOWNERS, combined with CODEOWNERS lines that list all three affiliation teams.
+The last pattern is the adopted approach for GOVERNANCE §4's "at least two Founding Parties represented" rule: CODEOWNERS lines listing all three affiliation teams. A reviewer from any two parties satisfies the cross-party review requirement. See [Planned Evolution](#planned-evolution) for the future upgrade path using repo rulesets.
 
 ## Onboarding
 
@@ -148,11 +148,22 @@ Changes follow the governance change process (GOVERNANCE.md §12) when they affe
 
 ---
 
-## Decisions still needed
+## Planned Evolution
 
-0. **Is this too much?** — we want to balance speed and control. Also, this serves as an example of what's possible when adopting cross-organization collaboration and Inner Source practices.
-1. **Admin team size** — one or two per Founding Party. Two gives redundancy; one keeps the privileged group small.
-2. **Maintain vs Write for `release-managers`** — Maintain lets them manage releases without full repo admin, which is usually what you want.
-3. **Affiliation enforcement mechanism** — CODEOWNERS lines listing all three affiliation teams (as above), or repo ruleset requiring N reviewers from a labeled set? The ruleset approach is cleaner once GitHub's "required reviewers from distinct teams" feature is more mature.
-4. **Bots policy** — confirm the "PR to add a bot" approach, or require SC approval.
-5. **Membership review cadence** — annual is suggested; some orgs do semi-annually for `admins` and `maintainers`.
+Items intentionally deferred or identified for future revision. Each entry notes the condition that should trigger the revisit.
+
+| Item | Current state | Planned change | Trigger |
+| --- | --- | --- | --- |
+| `release-managers` team | Permission level adopted (Maintain); team not yet created. | Create team and assign membership when the first release is ready to cut. | First release to cut. |
+| Cross-party review enforcement | CODEOWNERS listing all three affiliation teams. | Migrate to repo rulesets with "required reviewers from distinct teams" for cleaner enforcement. | GitHub "required reviewers from distinct teams" feature reaches sufficient maturity. |
+| Membership review cadence | Annual for all teams. | Move `admins` and `maintainers` to semi-annual review. | Org reaches substantial, sustained activity. |
+
+---
+
+## Adopted Decisions
+
+1. **Admin team size** — Two per Founding Party. Redundancy is prudent for a small cross-party org.
+2. **Maintain vs Write for `release-managers`** — Maintain. This allows release and tag management without granting full repo admin. Team creation is deferred; see [Planned Evolution](#planned-evolution).
+3. **Affiliation enforcement mechanism** — CODEOWNERS lines listing all three affiliation teams. See [Planned Evolution](#planned-evolution) for the repo ruleset upgrade path.
+4. **Bots policy** — A PR to this repository is sufficient to add a bot. SC approval is not required at this stage.
+5. **Membership review cadence** — Annual for all teams. See [Planned Evolution](#planned-evolution) for a potential cadence increase for `admins` and `maintainers`.
