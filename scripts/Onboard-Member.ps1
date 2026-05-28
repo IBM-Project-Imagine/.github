@@ -138,8 +138,12 @@ if ($PSCmdlet.ParameterSetName -eq 'File') {
         $workItems += [pscustomobject]@{ Username = $row.Username.Trim(); Affiliation = $row.Affiliation.Trim(); ExtraTeams = $extraTeams }
     }
 } else {
+    $extraTeams = @()
+    if ($Teams.Count -gt 0) {
+        $extraTeams = $Teams | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
+    }
     foreach ($user in $Username) {
-        $workItems += [pscustomobject]@{ Username = $user; Affiliation = $Affiliation; ExtraTeams = $Teams }
+        $workItems += [pscustomobject]@{ Username = $user; Affiliation = $Affiliation; ExtraTeams = $extraTeams }
     }
 }
 
