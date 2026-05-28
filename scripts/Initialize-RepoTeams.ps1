@@ -41,21 +41,19 @@
     Display this help text and exit.
 
 .EXAMPLE
-    .\Initialize-RepoTeams.ps1 -Project my-library -Repo my-library
+    .\Initialize-RepoTeams.ps1  -Repo my-library
 
     Creates my-library-maintainers (maintain) and my-library-contributors (triage)
     and grants each team the appropriate access to the my-library repository.
 
 .EXAMPLE
-    .\Initialize-RepoTeams.ps1 -Project my-library -Repo my-library -MaintainerPermission write -WhatIf
+    .\Initialize-RepoTeams.ps1 -Repo my-library -MaintainerPermission write -WhatIf
 
     Shows what would be created without making any API calls.
 #>
 
 [CmdletBinding(SupportsShouldProcess)]
 param(
-    [Parameter(Mandatory)]
-    [string]$Project,
 
     [Parameter(Mandatory)]
     [string]$Repo,
@@ -63,7 +61,7 @@ param(
     [ValidateSet('write', 'maintain')]
     [string]$MaintainerPermission = 'maintain',
 
-    [ValidateSet('triage', 'write')]
+    [ValidateSet('triage', 'write', 'read')]
     [string]$ContributorPermission = 'triage',
 
     [switch]$Help
@@ -98,16 +96,16 @@ $Org = 'IBM-Project-Imagine'
 
 $TeamDefinitions = @(
     [ordered]@{
-        slug        = "$Project-maintainers"
-        name        = "$Project : Maintainers"
-        description = "Maintainers for the $Project project."
+        slug        = "$Repo-maintainers"
+        name        = "$Repo-maintainers"
+        description = "Maintainers for the $Repo project."
         privacy     = 'closed'
         permission  = $MaintainerPermission
     },
     [ordered]@{
-        slug        = "$Project-contributors"
-        name        = "$Project : Contributors"
-        description = "Contributors for the $Project project."
+        slug        = "$Repo-contributors"
+        name        = "$Repo-contributors"
+        description = "Contributors for the $Repo project."
         privacy     = 'closed'
         permission  = $ContributorPermission
     }
@@ -127,7 +125,7 @@ function Get-ExistingTeamId ([string]$Slug) {
 # Main
 # ---------------------------------------------------------------------------
 
-Write-Host "Initializing repo teams for project '$Project' on $Org/$Repo..."
+Write-Host "Initializing repo teams for repository '$Repo' on $Org  ..."
 Write-Host ''
 
 foreach ($team in $TeamDefinitions) {
@@ -142,7 +140,7 @@ foreach ($team in $TeamDefinitions) {
             name        = $team.name
             description = $team.description
             privacy     = $team.privacy
-        }
+        }       
 
         if ($PSCmdlet.ShouldProcess("@$Org/$($team.slug)", 'Create team')) {
             $result = $body | ConvertTo-Json -Compress | gh api "orgs/$Org/teams" --method POST --input -

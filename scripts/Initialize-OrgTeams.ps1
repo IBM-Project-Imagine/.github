@@ -73,42 +73,42 @@ $Org = 'IBM-Project-Imagine'
 $TeamDefinitions = @(
     [ordered]@{
         slug        = 'admins'
-        name        = 'Admins'
+        name        = 'admins'
         description = 'GitHub organization owners. Kept intentionally small.'
         privacy     = 'closed'
         parent      = $null
     },
     [ordered]@{
         slug        = 'members'
-        name        = 'Members'
+        name        = 'members'
         description = 'Base team. All org members belong to it.'
         privacy     = 'closed'
         parent      = $null
     },
     [ordered]@{
         slug        = 'maintainers'
-        name        = 'Maintainers'
+        name        = 'maintainers'
         description = 'Write access to shared and incubating repos.'
         privacy     = 'closed'
         parent      = 'members'
     },
     [ordered]@{
         slug        = 'affiliation-microsoft'
-        name        = 'Affiliation: Microsoft'
+        name        = 'affiliation-microsoft'
         description = 'Members affiliated with Microsoft.'
         privacy     = 'closed'
         parent      = 'members'
     },
     [ordered]@{
         slug        = 'affiliation-github'
-        name        = 'Affiliation: GitHub'
+        name        = 'affiliation-github'
         description = 'Members affiliated with GitHub.'
         privacy     = 'closed'
         parent      = 'members'
     },
     [ordered]@{
         slug        = 'affiliation-ibm'
-        name        = 'Affiliation: IBM'
+        name        = 'affiliation-ibm'
         description = 'Members affiliated with IBM.'
         privacy     = 'closed'
         parent      = 'members'
